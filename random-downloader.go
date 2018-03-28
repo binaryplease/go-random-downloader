@@ -13,22 +13,39 @@ import (
 	"time"
 )
 
-func downloadHtml(url string, filename string) {
+func downloadHtml(url string, directory string) {
 
-	fmt.Println("Downloading " + url + " ...")
-	resp, err := http.Get(url)
-	if err != nil {
-		panic(err)
+	var filename string
+
+	// Create dir if not exists
+	os.MkdirAll(directory, os.ModePerm)
+
+	// fmt.Println("Checking if " + filename + " exists ...")
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+
+		fmt.Println("Downloading " + url + " ...")
+		resp, err := http.Get(url)
+		if err != nil {
+			panic(err)
+		}
+		defer resp.Body.Close()
+
+		// Determine final filename
+		finalURL := resp.Request.URL.Path
+		filename := filepath.Join(directory, path.Base(finalURL))
+
+		f, err := os.Create(filename)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+
+		io.Copy(f, resp.Body)
+
+		fmt.Println(filename + " saved!")
+	} else {
+		fmt.Println(filename + " already exists!")
 	}
-	defer resp.Body.Close()
-
-	f, err := os.Create(filename)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	io.Copy(f, resp.Body)
 
 }
 
@@ -83,18 +100,7 @@ func main() {
 
 		// Check if necessary parameters are provided
 		if mUrl != "" {
-
-			// Create dir if not exists
-			filename := filepath.Join(directory, path.Base(mUrl))
-			os.MkdirAll(directory, os.ModePerm)
-
-			// fmt.Println("Checking if " + filename + " exists ...")
-			if _, err := os.Stat(filename); os.IsNotExist(err) {
-				downloadHtml(mUrl, filename)
-				fmt.Println(filename + " saved!")
-			} else {
-				fmt.Println(filename + " already exists!")
-			}
+			downloadHtml(mUrl, directory)
 		} else {
 			cli.ShowAppHelp(c)
 		}

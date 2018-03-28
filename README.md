@@ -33,4 +33,9 @@ GLOBAL OPTIONS:
    --retries value, -r value    Retries to get new page (default: 3)
    --directory value, -d value  The download destination directry (default: "./downloaded-content")
    --help, -h                   show help
+   
 ```
+
+# Example
+
+[![asciicast](https://asciinema.org/a/b4mUpLTOUhFB1rJvKlBKFh2zh.png)](https://asciinema.org/a/b4mUpLTOUhFB1rJvKlBKFh2zh)

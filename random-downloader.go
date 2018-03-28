@@ -56,7 +56,7 @@ func main() {
 	app.Name = "random-downloader"
 	app.Compiled = time.Now()
 	app.Usage = "Download website sources using the Random Page function"
-	app.UsageText = "url [-n number] [-d directory] [-r]"
+	app.UsageText = "random-downloader url [-n number] [-d directory] [-r]"
 	app.Description = "A crawler to download websites using the random page link"
 	app.HideVersion = true
 	app.Authors = []cli.Author{

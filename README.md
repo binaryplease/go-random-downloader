@@ -16,7 +16,7 @@ NAME:
    random-downloader - Download website sources using the Random Page function
 
 USAGE:
-   url [-n number] [-d directory] [-r]
+   random-downlader url [-n number] [-d directory] [-r]
 
 DESCRIPTION:
    A crawler to download websites using the random page link

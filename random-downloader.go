@@ -13,8 +13,11 @@ import (
 	"time"
 )
 
-func downloadHtml(url string, directory string) {
+func downloadHtml(url string, directory string, retries int) {
 
+	if retries == 0 {
+		return
+	}
 	var filename string
 
 	// Create dir if not exists
@@ -23,7 +26,6 @@ func downloadHtml(url string, directory string) {
 	// fmt.Println("Checking if " + filename + " exists ...")
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 
-		fmt.Println("Downloading " + url + " ...")
 		resp, err := http.Get(url)
 		if err != nil {
 			panic(err)
@@ -44,7 +46,8 @@ func downloadHtml(url string, directory string) {
 
 		fmt.Println(filename + " saved!")
 	} else {
-		fmt.Println(filename + " already exists!")
+		fmt.Println(filename + " already exists! Retries left: " + string(retries))
+		downloadHtml(url, directory, retries-1)
 	}
 
 }
@@ -74,6 +77,7 @@ func main() {
 		cli.IntFlag{
 			Name:        "n, number",
 			Usage:       "Number of pages to download",
+			Value:       1,
 			Destination: &numpages,
 		},
 
@@ -86,8 +90,10 @@ func main() {
 		cli.IntFlag{
 			Name:        "retries, r",
 			Usage:       "Retries to get new page",
+			Value:       3,
 			Destination: &retries,
 		},
+
 		cli.StringFlag{
 			Name:        "directory, d",
 			Usage:       "The download destination directry",
@@ -100,7 +106,9 @@ func main() {
 
 		// Check if necessary parameters are provided
 		if mUrl != "" {
-			downloadHtml(mUrl, directory)
+			for i := 0; i < numpages; i++ {
+				downloadHtml(mUrl, directory, retries)
+			}
 		} else {
 			cli.ShowAppHelp(c)
 		}

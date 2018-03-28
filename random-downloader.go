@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/urfave/cli"
 	"io"
 	"log"
@@ -46,7 +45,7 @@ func downloadHtml(url string, directory string, retries int) {
 
 		fmt.Println(filename + " saved!")
 	} else {
-		fmt.Println(filename + " already exists! Retries left: " + string(retries))
+		fmt.Println(filename + " already exists! Retries left: " + string(retries-1))
 		downloadHtml(url, directory, retries-1)
 	}
 
